@@ -1,53 +1,42 @@
 package som.sps.zmoto
 
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import som.sps.zmoto.model.CategoriesResponse
-import som.sps.zmoto.network.RetrofitClient
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
+import som.sps.zmoto.databinding.ActivityMainBinding
 import som.sps.zmoto.ui.main.SectionsPagerAdapter
-import timber.log.Timber
+import som.sps.zmoto.viewmodel.CategoryViewModel
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var categoryViewModel: CategoryViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-
-        fab.setOnClickListener { view ->
-                RetrofitClient.getZomotoService().getCategories().enqueue(object :
-        Callback<CategoriesResponse> {
-                    override fun onFailure(call: Call<CategoriesResponse>, t: Throwable) {
-                        Timber.e(t)
-                    }
-
-                    override fun onResponse(
-                        call: Call<CategoriesResponse>,
-                        response: Response<CategoriesResponse>
-                    ) {
-                        Timber.d("${response.body()}")
-                    }
-                }
-                )
-
-        }
+         binding= DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        categoryViewModel= ViewModelProviders.of(this).get(CategoryViewModel::class.java)
+        binding.categoryViewModel=categoryViewModel
+        binding.lifecycleOwner=this
+        binding.executePendingBindings()
+        addObservers()
+        categoryViewModel.fetchCategories()
     }
+
+    private fun addObservers() {
+        categoryViewModel.categories.observe(this, Observer {
+            it?.let {
+                val sectionsPagerAdapter =  SectionsPagerAdapter(this, supportFragmentManager,
+                    it
+                )
+                binding.viewPager.adapter = sectionsPagerAdapter
+                binding.tabs.setupWithViewPager(binding.viewPager)
+            }
+
+        })
+    }
+
+
 }
