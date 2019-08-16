@@ -14,28 +14,34 @@ class RestaurantPagedAdapter :
     PagedListAdapter<Restaurants, RestaurantPagedAdapter.ViewHolder>(object :
         DiffUtil.ItemCallback<Restaurants>() {
         override fun areItemsTheSame(oldItem: Restaurants, newItem: Restaurants): Boolean {
-           return oldItem==newItem
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: Restaurants, newItem: Restaurants): Boolean {
-           return oldItem.restaurant.id==newItem.restaurant.id
+            return oldItem.restaurant.id == newItem.restaurant.id
         }
 
     }) {
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-return ViewHolder(DataBindingUtil.inflate<LayoutRestaurantItemBinding>(LayoutInflater.from(parent.context),R.layout.layout_restaurant_item,parent,false))
+        return ViewHolder(
+            DataBindingUtil.inflate<LayoutRestaurantItemBinding>(
+                LayoutInflater.from(
+                    parent.context
+                ), R.layout.layout_restaurant_item, parent, false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.restaurantItemBinding.restaurant=getItem(position)
+        holder.restaurantItemBinding.restaurant = getItem(position)
         holder.restaurantItemBinding.executePendingBindings()
     }
 
 
-    class ViewHolder(val restaurantItemBinding: LayoutRestaurantItemBinding) : RecyclerView.ViewHolder(restaurantItemBinding.root) {
+    class ViewHolder(val restaurantItemBinding: LayoutRestaurantItemBinding) :
+        RecyclerView.ViewHolder(restaurantItemBinding.root) {
 
     }
 }

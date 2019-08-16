@@ -24,7 +24,7 @@ class PageViewModel(  entityId:Int, entityType:String,private val  categoryId:In
             RestaurantSearcDataSourceFactory(entityId, entityType, categoryId)
 
         //getting the live data source from data source factory
-        liveDataSource = itemDataSourceFactory.itemLiveDataSource
+        liveDataSource =itemDataSourceFactory.itemLiveDataSource
 
         //Getting PagedList config
         val pagedListConfig = PagedList.Config.Builder()
