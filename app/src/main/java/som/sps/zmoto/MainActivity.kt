@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
-        binding.toolbar.subtitle = Constants.LOCATION
+        binding.toolbar.subtitle =PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.KEY_LOACTION_TITLE,Constants.LOCATION)
         setSupportActionBar(binding.toolbar)
         binding.categoryViewModel = categoryViewModel
         binding.lifecycleOwner = this
@@ -87,10 +87,12 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
         val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
         editor.putString(Constants.KEY_LOCATION, location.cityName);
         editor.putFloat(Constants.KEY_LAT, location.latitude.toFloat());
-        editor.putFloat(Constants.KEY_LOCATION, location.longitude.toFloat());
-        editor.putString(Constants.KEY_LOCATION, location.title);
+        editor.putFloat(Constants.KEY_LON, location.longitude.toFloat());
+        editor.putString(Constants.KEY_LOACTION_TITLE, location.title);
+        editor.putInt(Constants.KEY_ENTITY_TYPE, location.entityId);
+        editor.putString(Constants.KEY_ENTITY_TYPE, location.entityType);
         editor.apply()
-        binding.toolbar.subtitle = "${location.cityName},${location.countryName}"
+        binding.toolbar.subtitle = "${location.title}"
         searchLocationFragment?.dismiss()
         searchLocationFragment=null
     }

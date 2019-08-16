@@ -3,6 +3,9 @@ package som.sps.zmoto.network
 class Constants {
 
     companion object {
+        const val KEY_ENTITY_TYPE="entityType"
+        const val KEY_ENTITY_ID="entityId"
+
         const val KEY_LOCATION: String = "sp_location"
         const val KEY_LAT = "sp_lat"
         const val KEY_LON = "sp_lon"
