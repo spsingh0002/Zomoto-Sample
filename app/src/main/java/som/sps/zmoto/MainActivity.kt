@@ -12,7 +12,7 @@ import som.sps.zmoto.databinding.ActivityMainBinding
 import som.sps.zmoto.listeners.SearchSelectionListener
 import som.sps.zmoto.model.LocationSuggestion
 import som.sps.zmoto.network.Constants
-import som.sps.zmoto.ui.main.SectionsPagerAdapter
+import som.sps.zmoto.adapters.SectionsPagerAdapter
 import som.sps.zmoto.viewmodel.CategoryViewModel
 import timber.log.Timber
 
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
         categoryViewModel.categories.observe(this, Observer {
             it?.let {
                 val sectionsPagerAdapter = SectionsPagerAdapter(
-                    this, supportFragmentManager,
+                    supportFragmentManager,
                     it
                 )
                 binding.viewPager.adapter = sectionsPagerAdapter
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
         editor.putFloat(Constants.KEY_LAT, location.latitude.toFloat());
         editor.putFloat(Constants.KEY_LON, location.longitude.toFloat());
         editor.putString(Constants.KEY_LOACTION_TITLE, location.title);
-        editor.putInt(Constants.KEY_ENTITY_TYPE, location.entityId);
+        editor.putInt(Constants.KEY_ENTITY_ID, location.entityId);
         editor.putString(Constants.KEY_ENTITY_TYPE, location.entityType);
         editor.apply()
         binding.toolbar.subtitle = "${location.title}"

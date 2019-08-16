@@ -38,7 +38,10 @@ dependencies {
 
     // image
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+//    annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
+    //adding paging
+    implementation "android.arch.paging:runtime:$rootProject.paging_version"
     // parser
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
 
@@ -77,4 +80,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:4.1.0"
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+
+    implementation 'com.hannesdorfmann:adapterdelegates4:4.1.1'
 }

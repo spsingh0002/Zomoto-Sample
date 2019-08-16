@@ -1,6 +1,7 @@
 package som.sps.zmoto.ui.main
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,20 +9,28 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import som.sps.zmoto.R
+import som.sps.zmoto.adapters.RestaurantPagedAdapter
+import som.sps.zmoto.network.Constants
+import som.sps.zmoto.viewmodel.PageViewModel
+import som.sps.zmoto.viewmodel.PageViewModelFactory
+import timber.log.Timber
 
-/**
- * A placeholder fragment containing a simple view.
- */
 class PlaceholderFragment : Fragment() {
 
     private lateinit var pageViewModel: PageViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pageViewModel = ViewModelProviders.of(this).get(PageViewModel::class.java).apply {
-            setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 1)
-        }
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val id = preferences.getInt(Constants.KEY_ENTITY_ID, -1);
+        val entityType = preferences.getString(Constants.KEY_ENTITY_TYPE, "city");
+        val categoryId = arguments?.getInt(ARG_SECTION_NUMBER) ?: 1
+        val pageViewModelFactory = PageViewModelFactory(id, entityType, categoryId)
+        pageViewModel = ViewModelProviders.of(this, pageViewModelFactory).get(PageViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -29,12 +38,17 @@ class PlaceholderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_main, container, false)
-        val textView: TextView = root.findViewById(R.id.section_label)
-        pageViewModel.text.observe(this, Observer<String> {
-            textView.text = it
+        val recyclerView = root.findViewById<RecyclerView>(R.id.recyclerView)
+        val adapter= RestaurantPagedAdapter()
+        recyclerView.adapter=adapter
+        recyclerView.layoutManager=LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        pageViewModel.itemPagedList.observe(this, Observer {
+            adapter.submitList(it)
+            Timber.i("$it.lastKey =>${it.dataSource.isInvalid}, ${it}")
         })
         return root
     }
+
 
     companion object {
         /**

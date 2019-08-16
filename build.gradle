@@ -44,7 +44,8 @@ ext {
     supportLibraryVersion = '1.0.2'
     materialVersion = '1.0.0'
     gsonVersion = '2.8.2'
-0  
+
+     paging_version = "1.0.0"
     glideVersion = '3.7.0'
 
     dagger2Version = '2.16'
