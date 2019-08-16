@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import som.sps.zmoto.R
+import timber.log.Timber
 
 class RestaurantDetailFragment : Fragment() {
 
@@ -37,7 +39,16 @@ class RestaurantDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(RestaurantDetailViewModel::class.java)
-        // TODO: Use the ViewModel
+
+        viewModel.categories.observe(this, Observer {
+            Timber.i("$it")
+        })
+
+        viewModel.isLoading.observe(this, Observer {
+            Timber.i("isLoading ->$it")
+        })
+
+        viewModel.fetchRestaurantDetail(resId)
     }
 
 }
