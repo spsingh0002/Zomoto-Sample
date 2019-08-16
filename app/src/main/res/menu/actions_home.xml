@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/suggestLocation"
-        android:icon="@drawable/ic_location_city_black_24dp"
-        android:title="@string/location"
-        android:visible="true"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always|collapseActionView"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 </menu>
