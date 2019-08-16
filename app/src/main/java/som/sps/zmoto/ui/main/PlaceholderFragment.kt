@@ -1,5 +1,6 @@
 package som.sps.zmoto.ui.main
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import som.sps.zmoto.R
+import som.sps.zmoto.RestaurantDetail
 import som.sps.zmoto.adapters.RestaurantPagedAdapter
 import som.sps.zmoto.databinding.FragmentMainBinding
 import som.sps.zmoto.listeners.OnRestaurantSelection
@@ -97,7 +99,10 @@ class PlaceholderFragment : Fragment(), SharedPreferences.OnSharedPreferenceChan
     }
 
     override fun onClick(restaurant: Restaurants) {
-
+Timber.i("${restaurant.restaurant}")
+        val intent=Intent(context,RestaurantDetail::class.java)
+        intent.putExtra("ResId",restaurant.restaurant.id)
+        context?.startActivity(intent)
     }
 
     companion object {
