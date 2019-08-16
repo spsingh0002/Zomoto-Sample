@@ -1,5 +1,6 @@
 package som.sps.zmoto.ui.main
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
@@ -18,7 +19,18 @@ import som.sps.zmoto.viewmodel.PageViewModel
 import som.sps.zmoto.viewmodel.PageViewModelFactory
 import timber.log.Timber
 
-class PlaceholderFragment : Fragment() {
+class PlaceholderFragment : Fragment(),SharedPreferences.OnSharedPreferenceChangeListener {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if(key==Constants.KEY_ENTITY_TYPE){
+            val id = sharedPreferences?.getInt(Constants.KEY_ENTITY_ID, -1)?:-1;
+            val entityType = sharedPreferences?.getString(Constants.KEY_ENTITY_TYPE, "city")?:"city";
+
+            if(id!=-1){
+                pageViewModel.reloadData(id, entityType)
+            }
+
+        }
+    }
 
     private lateinit var pageViewModel: PageViewModel
 
@@ -31,6 +43,7 @@ class PlaceholderFragment : Fragment() {
         val categoryId = arguments?.getInt(ARG_SECTION_NUMBER) ?: 1
         val pageViewModelFactory = PageViewModelFactory(id, entityType, categoryId)
         pageViewModel = ViewModelProviders.of(this, pageViewModelFactory).get(PageViewModel::class.java)
+        PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onCreateView(
@@ -49,6 +62,11 @@ class PlaceholderFragment : Fragment() {
         return root
     }
 
+
+    override fun onDestroy() {
+        PreferenceManager.getDefaultSharedPreferences(context).unregisterOnSharedPreferenceChangeListener(this)
+        super.onDestroy()
+    }
 
     companion object {
         /**

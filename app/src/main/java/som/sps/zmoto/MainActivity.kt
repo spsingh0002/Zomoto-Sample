@@ -14,6 +14,7 @@ import som.sps.zmoto.model.LocationSuggestion
 import som.sps.zmoto.network.Constants
 import som.sps.zmoto.adapters.SectionsPagerAdapter
 import som.sps.zmoto.viewmodel.CategoryViewModel
+import som.sps.zmoto.viewmodel.SearchLocationViewModel
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), SearchSelectionListener {
@@ -21,12 +22,16 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
     private var searchLocationFragment: SearchLocationFragment? = null
     private lateinit var binding: ActivityMainBinding
     private lateinit var categoryViewModel: CategoryViewModel
+    private lateinit var searchLocationViewModel: SearchLocationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
-        binding.toolbar.subtitle =PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.KEY_LOACTION_TITLE,Constants.LOCATION)
+        searchLocationViewModel =
+            ViewModelProviders.of(this).get(SearchLocationViewModel::class.java)
+        binding.toolbar.subtitle = PreferenceManager.getDefaultSharedPreferences(this)
+            .getString(Constants.KEY_LOACTION_TITLE, Constants.DEFAULT_LOCATION)
         setSupportActionBar(binding.toolbar)
         binding.categoryViewModel = categoryViewModel
         binding.lifecycleOwner = this
@@ -35,6 +40,8 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
         addObservers()
         categoryViewModel.fetchCategories()
 
+        if (!PreferenceManager.getDefaultSharedPreferences(this).contains(Constants.KEY_ENTITY_ID))
+            searchLocationViewModel.searchLocation(Constants.DEFAULT_LOCATION)
     }
 
 
@@ -50,16 +57,23 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
             }
 
         })
+
+        searchLocationViewModel.locationMutableLiveData.observe(this, Observer {
+            if (!it.locationSuggestionList.isNullOrEmpty()) {
+                onSelection(it.locationSuggestionList.get(0))
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.actions_home, menu)
         val searchItem = menu?.findItem(R.id.action_search)
 
-        var searchView:SearchView? = searchItem?.actionView as androidx.appcompat.widget.SearchView
-        searchView?.queryHint="Search Location"
+        var searchView: SearchView? = searchItem?.actionView as androidx.appcompat.widget.SearchView
+        searchView?.queryHint = "Search Location"
 
-        searchView?.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+        searchView?.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 Timber.i("SearchOnQueryTextSubmit: $query")
                 if (!searchView.isIconified) {
@@ -81,7 +95,6 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
     }
 
 
-
     override fun onSelection(location: LocationSuggestion) {
         Timber.i("location: $location")
         val editor = PreferenceManager.getDefaultSharedPreferences(this).edit()
@@ -94,7 +107,9 @@ class MainActivity : AppCompatActivity(), SearchSelectionListener {
         editor.apply()
         binding.toolbar.subtitle = "${location.title}"
         searchLocationFragment?.dismiss()
-        searchLocationFragment=null
+        searchLocationFragment = null
+
+        binding.viewPager.adapter?.notifyDataSetChanged()
     }
 
 }

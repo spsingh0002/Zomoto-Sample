@@ -18,8 +18,7 @@ interface ZomotoService {
     @GET("locations")
     fun getLocationSuggestions(
         @Query("query") query: String,
-        @Query("lat") lat: Double? = Constants.lat,
-        @Query("lon") lon: Double? = Constants.longitute,
+
         @Query("count") results: Int = 10
     ): Call<LocationSuggestionResponse>
 

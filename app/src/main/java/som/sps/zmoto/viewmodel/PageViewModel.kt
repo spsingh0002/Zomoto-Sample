@@ -9,13 +9,19 @@ import som.sps.zmoto.model.Restaurants
 import som.sps.zmoto.network.Constants
 import som.sps.zmoto.network.RestaurantSearcDataSourceFactory
 
-class PageViewModel(private  val entityId:Int,private val entityType:String,private val  categoryId:Int) : ViewModel() {
+class PageViewModel(  entityId:Int, entityType:String,private val  categoryId:Int) : ViewModel() {
 
-    var itemPagedList: LiveData<PagedList<Restaurants>>
-    var liveDataSource: LiveData<PageKeyedDataSource<Int, Restaurants>>
+
+   lateinit var itemPagedList: LiveData<PagedList<Restaurants>>
+    lateinit  var liveDataSource: LiveData<PageKeyedDataSource<Int, Restaurants>>
 
     init {
-        val itemDataSourceFactory = RestaurantSearcDataSourceFactory(entityId, entityType, categoryId)
+        loadData(entityId,entityType)
+    }
+
+    private fun loadData(entityId: Int, entityType: String) {
+        val itemDataSourceFactory =
+            RestaurantSearcDataSourceFactory(entityId, entityType, categoryId)
 
         //getting the live data source from data source factory
         liveDataSource = itemDataSourceFactory.itemLiveDataSource
@@ -30,5 +36,9 @@ class PageViewModel(private  val entityId:Int,private val entityType:String,priv
         //Building the paged list
         itemPagedList = LivePagedListBuilder(itemDataSourceFactory, pagedListConfig)
             .build()
+    }
+
+    fun reloadData(entityId: Int, entityType: String) {
+        loadData(entityId, entityType)
     }
 }
