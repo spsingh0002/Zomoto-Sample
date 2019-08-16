@@ -4,10 +4,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
-import som.sps.zmoto.model.CategoriesResponse
-import som.sps.zmoto.model.LocationSuggestionResponse
-import som.sps.zmoto.model.RestaurantDetailResponse
-import som.sps.zmoto.model.RestaurantResponse
+import som.sps.zmoto.model.*
 
 interface ZomotoService {
 
@@ -36,5 +33,5 @@ interface ZomotoService {
 
     @Headers("user-key:${Constants.key}")
     @GET("restaurant")
-    fun getRestaurantDetail(@Query("res_id") resId: Int):Call<RestaurantDetailResponse>
+    fun getRestaurantDetail(@Query("res_id") resId: Int):Call<Restaurant>
 }

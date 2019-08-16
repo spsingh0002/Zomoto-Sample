@@ -6,18 +6,16 @@ import androidx.lifecycle.ViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import som.sps.zmoto.RestaurantDetail
-import som.sps.zmoto.model.RestaurantDetailResponse
+import som.sps.zmoto.model.Restaurant
 import som.sps.zmoto.network.RetrofitClient
 import timber.log.Timber
 
 class RestaurantDetailViewModel : ViewModel() {
 
-
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _categories = MutableLiveData<RestaurantDetailResponse>()
+    private val _categories = MutableLiveData<Restaurant>()
 
-    val categories: LiveData<RestaurantDetailResponse>
+    val categories: LiveData<Restaurant>
         get() = _categories
     val isLoading: LiveData<Boolean>
         get() = _isLoading
@@ -25,15 +23,15 @@ class RestaurantDetailViewModel : ViewModel() {
     fun fetchRestaurantDetail(resId: Int) {
         _isLoading.postValue(true)
         RetrofitClient.getZomotoService().getRestaurantDetail(resId)
-            .enqueue(object : Callback<RestaurantDetailResponse> {
-                override fun onFailure(call: Call<RestaurantDetailResponse>, t: Throwable) {
+            .enqueue(object : Callback<Restaurant> {
+                override fun onFailure(call: Call<Restaurant>, t: Throwable) {
                     Timber.e(t)
                     _isLoading.postValue(false)
                 }
 
                 override fun onResponse(
-                    call: Call<RestaurantDetailResponse>,
-                    response: Response<RestaurantDetailResponse>
+                    call: Call<Restaurant>,
+                    response: Response<Restaurant>
                 ) {
                     if (response.isSuccessful) {
                         _categories.postValue(response.body())
