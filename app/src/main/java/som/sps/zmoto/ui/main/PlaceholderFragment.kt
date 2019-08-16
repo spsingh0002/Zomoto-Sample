@@ -17,25 +17,14 @@ import androidx.recyclerview.widget.RecyclerView
 import som.sps.zmoto.R
 import som.sps.zmoto.adapters.RestaurantPagedAdapter
 import som.sps.zmoto.databinding.FragmentMainBinding
+import som.sps.zmoto.listeners.OnRestaurantSelection
+import som.sps.zmoto.model.Restaurants
 import som.sps.zmoto.network.Constants
 import som.sps.zmoto.viewmodel.PageViewModel
 import som.sps.zmoto.viewmodel.PageViewModelFactory
 import timber.log.Timber
 
-class PlaceholderFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (key == Constants.KEY_ENTITY_TYPE) {
-            val id = sharedPreferences?.getInt(Constants.KEY_ENTITY_ID, -1) ?: -1;
-            val entityType =
-                sharedPreferences?.getString(Constants.KEY_ENTITY_TYPE, "city") ?: "city";
-
-            if (id != -1) {
-                pageViewModel.reloadData(id, entityType)
-                addObservers()
-            }
-
-        }
-    }
+class PlaceholderFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener,OnRestaurantSelection {
 
     private lateinit var pageViewModel: PageViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +67,7 @@ class PlaceholderFragment : Fragment(), SharedPreferences.OnSharedPreferenceChan
 
     private fun addObservers() {
         binding.progressBar.visibility=View.VISIBLE
-        val adapter = RestaurantPagedAdapter()
+        val adapter = RestaurantPagedAdapter(this)
         binding.recyclerView.adapter = adapter
         pageViewModel.itemPagedList.observe(this, Observer {
             adapter.submitList(it)
@@ -93,17 +82,26 @@ class PlaceholderFragment : Fragment(), SharedPreferences.OnSharedPreferenceChan
         super.onDestroy()
     }
 
-    companion object {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private const val ARG_SECTION_NUMBER = "section_number"
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == Constants.KEY_ENTITY_TYPE) {
+            val id = sharedPreferences?.getInt(Constants.KEY_ENTITY_ID, -1) ?: -1;
+            val entityType =
+                sharedPreferences?.getString(Constants.KEY_ENTITY_TYPE, "city") ?: "city";
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
+            if (id != -1) {
+                pageViewModel.reloadData(id, entityType)
+                addObservers()
+            }
+
+        }
+    }
+
+    override fun onClick(restaurant: Restaurants) {
+
+    }
+
+    companion object {
+        private const val ARG_SECTION_NUMBER = "section_number"
         @JvmStatic
         fun newInstance(sectionNumber: Int): PlaceholderFragment {
             return PlaceholderFragment().apply {

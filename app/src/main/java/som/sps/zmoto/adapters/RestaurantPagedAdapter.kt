@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import som.sps.zmoto.R
 import som.sps.zmoto.databinding.LayoutRestaurantItemBinding
+import som.sps.zmoto.listeners.OnRestaurantSelection
 import som.sps.zmoto.model.Restaurants
 
-class RestaurantPagedAdapter :
+class RestaurantPagedAdapter(private val listener:OnRestaurantSelection) :
     PagedListAdapter<Restaurants, RestaurantPagedAdapter.ViewHolder>(object :
         DiffUtil.ItemCallback<Restaurants>() {
         override fun areItemsTheSame(oldItem: Restaurants, newItem: Restaurants): Boolean {
@@ -36,6 +37,7 @@ class RestaurantPagedAdapter :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.restaurantItemBinding.restaurant = getItem(position)
+        holder.restaurantItemBinding.listener=listener
         holder.restaurantItemBinding.executePendingBindings()
     }
 

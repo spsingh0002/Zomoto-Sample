@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+<variable
+    name="listener"
+    type="som.sps.zmoto.listeners.OnRestaurantSelection" />
         <variable
             name="restaurant"
             type="som.sps.zmoto.model.Restaurants" />
@@ -15,6 +17,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="4dp"
         android:elevation="4dp"
+        android:onClick="@{()->listener.onClick(restaurant)}"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
