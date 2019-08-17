@@ -91,17 +91,17 @@ data class Restaurant(
     , @SerializedName("photo_count") var photoCount: Int
     , @SerializedName("phone_numbers") var phoneNumbers: String
     , @SerializedName("photos") var photos: List<Photos>
-    , @SerializedName("all_reviews") var reviews: Reviews
+    , @SerializedName("all_reviews") var allReview:AllReview
 )
-
+data class AllReview(@SerializedName ("reviews") var reviews:List<Reviews> )
 data class Reviews(
-    @SerializedName("review") var review:List<Review>
+    @SerializedName("review") var review:Review
 )
 
 data class Photos(@SerializedName("photo") var photo:Photo)
 
 data class Review(
-    @SerializedName("rating") var rating: String
+    @SerializedName("rating") var rating: Int
     , @SerializedName("review_text") var reviewText: String
     , @SerializedName("id") var id: String
     , @SerializedName("rating_color") var ratingColor: String

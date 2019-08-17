@@ -21,12 +21,15 @@ class BindingAdapters {
         @JvmStatic
         @BindingAdapter("app:review")
         fun bindReviewAdapter(recyclerView: RecyclerView, restaurant: Restaurant?): Unit {
-            recyclerView.addItemDecoration(
-                DividerItemDecoration(
-                    recyclerView.context,
-                    DividerItemDecoration.VERTICAL
+            restaurant?.let {
+                recyclerView.addItemDecoration(
+                    DividerItemDecoration(
+                        recyclerView.context,
+                        DividerItemDecoration.VERTICAL
+                    )
                 )
-            )
+                recyclerView.adapter=ReviewAdapter(restaurant.allReview.reviews)
+            }
         }
 
 
