@@ -3,6 +3,7 @@ package som.sps.zmoto.adapters
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
@@ -15,6 +16,34 @@ class BindingAdapters {
 
 
     companion object {
+
+
+        @JvmStatic
+        @BindingAdapter("app:review")
+        fun bindReviewAdapter(recyclerView: RecyclerView, restaurant: Restaurant?): Unit {
+            recyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    recyclerView.context,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
+        }
+
+
+        @JvmStatic
+        @BindingAdapter("app:photos")
+        fun bindPhotoAdapter(recyclerView: RecyclerView, restaurant: Restaurant?): Unit {
+            restaurant?.photos?.let {
+                recyclerView.addItemDecoration(
+                    DividerItemDecoration(
+                        recyclerView.context,
+                        DividerItemDecoration.HORIZONTAL
+                    )
+                )
+                recyclerView.adapter = PhotoAdapter(restaurant.photos)
+            }
+        }
+
 
         @JvmStatic
         @BindingAdapter(value = arrayOf("app:averageCost"), requireAll = true)
@@ -38,7 +67,7 @@ class BindingAdapters {
             textView: TextView,
             highlights: List<String>?
         ) {
-            textView.text ="\nHighLights: \n  ${ highlights?.joinToString(",")}"
+            textView.text = "\nHighLights: \n  ${highlights?.joinToString(",")}"
 
         }
 

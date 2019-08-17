@@ -90,13 +90,15 @@ data class Restaurant(
     , @SerializedName("all_reviews_count") var allReviewsCount: Int
     , @SerializedName("photo_count") var photoCount: Int
     , @SerializedName("phone_numbers") var phoneNumbers: String
-    , @SerializedName("photos") var photos: List<Photo>
+    , @SerializedName("photos") var photos: List<Photos>
     , @SerializedName("all_reviews") var reviews: Reviews
 )
 
 data class Reviews(
     @SerializedName("review") var review:List<Review>
 )
+
+data class Photos(@SerializedName("photo") var photo:Photo)
 
 data class Review(
     @SerializedName("rating") var rating: String
