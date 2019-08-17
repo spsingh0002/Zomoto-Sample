@@ -1,4 +1,4 @@
-package som.sps.zmoto.ui.restaurantdetail
+package som.sps.zmoto.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,10 +13,10 @@ import timber.log.Timber
 class RestaurantDetailViewModel : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _categories = MutableLiveData<Restaurant>()
+    private val _restaurant = MutableLiveData<Restaurant>()
 
-    val categories: LiveData<Restaurant>
-        get() = _categories
+    val restaurant: LiveData<Restaurant>
+        get() = _restaurant
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
@@ -34,7 +34,7 @@ class RestaurantDetailViewModel : ViewModel() {
                     response: Response<Restaurant>
                 ) {
                     if (response.isSuccessful) {
-                        _categories.postValue(response.body())
+                        _restaurant.postValue(response.body())
                     }
                     _isLoading.postValue(false)
                 }

@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="som.sps.zmoto.ui.restaurantdetail.RestaurantDetailViewModel" />
+            type="som.sps.zmoto.viewmodel.RestaurantDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RestaurantDetailFragment"
+            android:text="@{model.restaurant.name}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

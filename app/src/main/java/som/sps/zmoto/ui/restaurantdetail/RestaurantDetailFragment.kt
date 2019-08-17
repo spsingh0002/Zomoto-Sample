@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import som.sps.zmoto.R
+import som.sps.zmoto.viewmodel.RestaurantDetailViewModel
 import timber.log.Timber
 
 class RestaurantDetailFragment : Fragment() {
@@ -40,7 +41,7 @@ class RestaurantDetailFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(RestaurantDetailViewModel::class.java)
 
-        viewModel.categories.observe(this, Observer {
+        viewModel.restaurant.observe(this, Observer {
             Timber.i("$it")
         })
 
